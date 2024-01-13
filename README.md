@@ -24,15 +24,18 @@ When restricting the Key to Android apps, use `androidx.compose.samples.crane` a
 
 ## References
 
-* [State](http://developer.android.com/jetpack/compose/state)
-* [Side Effects](http://developer.android.com/jetpack/compose/side-effects)
+* [State and Jetpack Compose](http://developer.android.com/jetpack/compose/state)
+* [Side-effects in Compose](http://developer.android.com/jetpack/compose/side-effects)
 * [UI State](http://developer.android.com/topic/architecture/ui-layer/stateholders#elements-ui)
 * [UI State production](http://developer.android.com/topic/architecture/ui-layer/state-production)
 * [Output types in state production pipelines](http://developer.android.com/topic/architecture/ui-layer/state-production#output-types)
 * [Consuming flows safely in Jetpack Compose](http://medium.com/androiddevelopers/consuming-flows-safely-in-jetpack-compose-cde014d0d5a3)
-* [Lifecycle](http://developer.android.com/jetpack/compose/lifecycle)
+* [Lifecycle of Composable](http://developer.android.com/jetpack/compose/lifecycle)
 * [Thinking in Compose](http://developer.android.com/jetpack/compose/mental-model#any-order)
 * [Maps for Compose](http://developers.google.com/maps/documentation/android-sdk/maps-compose)
+* [When should I use derivedStateOf?](http://medium.com/androiddevelopers/jetpack-compose-when-should-i-use-derivedstateof-63ce7954c11b)
+* [Architecting your Compose UI](http://developer.android.com/jetpack/compose/architecture)
+* [Compose and other-libraries](http://developer.android.com/jetpack/compose/libraries)
 
 ## License
 ```
