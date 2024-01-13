@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.samples.crane.base.CraneDrawer
 import androidx.compose.samples.crane.base.CraneTabBar
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 typealias OnExploreItemClicked = (ExploreModel) -> Unit
 
@@ -58,12 +60,41 @@ fun CraneHome(
             CraneDrawer()
         }
     ) { padding ->
+        /* BEGIN-6 - rememberCoroutineScope */
+        // Using the rememberCoroutineScope API returns a CoroutineScope bound
+        // to the point in the Composition where you call it. The scope will be
+        // automatically canceled once it leaves the Composition. With that
+        // scope, you can start coroutines when you're not in the Composition,
+        // for example, in the openDrawer callback.
+        /* END-6 */
+        val scope = rememberCoroutineScope()
         CraneHomeContent(
             modifier = modifier.padding(padding),
             onExploreItemClicked = onExploreItemClicked,
             openDrawer = {
-                // TODO Codelab: rememberCoroutineScope step - open the navigation drawer
+                /* BEGIN-6 - rememberCoroutineScope */
+                // If you attempt to write scaffoldState.drawerState.open() in
+                // the openDrawer callback, you'll get an error! That's because
+                // the open function is a suspend function.
+                // Apart from APIs to make calling coroutines safe from the UI
+                // layer, some Compose APIs are suspend functions. One example
+                // of this is the API to open the navigation drawer. Suspend
+                // functions, in addition to being able to run asynchronous
+                // code, also help represent concepts that happen over time. As
+                // opening the drawer requires some time, movement, and
+                // potential animations, that's perfectly reflected with the
+                // suspend function, which will suspend the execution of the
+                // coroutine where it's been called until it finishes and
+                // resumes execution.
+                // . You cannot simply call suspend functions in it because
+                // openDrawer is not executed in the context of a coroutine.
+                // . You cannot use LaunchedEffect as before because we cannot
+                // call composables in openDrawer. We're not in the Composition.
                 // scaffoldState.drawerState.open()
+                scope.launch {
+                    scaffoldState.drawerState.open()
+                }
+                /* END-6 */
             }
         )
     }

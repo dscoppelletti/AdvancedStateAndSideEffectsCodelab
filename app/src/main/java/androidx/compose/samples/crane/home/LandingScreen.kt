@@ -71,6 +71,20 @@ fun LandingScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier) {
         // Create an effect that matches the lifecycle of LandingScreen.
         // If LandingScreen recomposes or onTimeout changes, the delay shouldn't
         // start again.
+        /* BEGIN-6.1 - LaunchedEffect vs rememberCoroutineScope */
+        // Could you use rememberCoroutineScope and call "scope.launch { delay();
+        // onTimeout(); }" instead of using LaunchedEffect?
+        // You could've done that, and it would've seemed to work, but it
+        // wouldn't be correct.
+        // Composables can be called by Compose at any moment. LaunchedEffect
+        // guarantees that the side-effect will be executed when the call to
+        // that composable makes it into the Composition. If you use
+        // rememberCoroutineScope and scope.launch, the coroutine will be
+        // executed every time LandingScreen is called by Compose regardless of
+        // whether that call makes it into the Composition or not. Therefore,
+        // you'll waste resources and you won't be executing this side-effect in
+        // a controlled environment.
+        /* END-6.1 */
         LaunchedEffect(Unit) {
             // Kotlin coroutines are the recommended way to perform asynchronous
             // operations in Android. An app would usually use coroutines to
