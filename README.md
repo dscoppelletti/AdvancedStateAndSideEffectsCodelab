@@ -31,6 +31,8 @@ When restricting the Key to Android apps, use `androidx.compose.samples.crane` a
 * [Output types in state production pipelines](http://developer.android.com/topic/architecture/ui-layer/state-production#output-types)
 * [Consuming flows safely in Jetpack Compose](http://medium.com/androiddevelopers/consuming-flows-safely-in-jetpack-compose-cde014d0d5a3)
 * [Lifecycle](http://developer.android.com/jetpack/compose/lifecycle)
+* [Thinking in Compose](http://developer.android.com/jetpack/compose/mental-model#any-order)
+* [Maps for Compose](http://developers.google.com/maps/documentation/android-sdk/maps-compose)
 
 ## License
 ```
