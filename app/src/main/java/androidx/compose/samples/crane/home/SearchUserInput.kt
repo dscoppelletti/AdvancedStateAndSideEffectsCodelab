@@ -24,19 +24,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.samples.crane.R
 import androidx.compose.samples.crane.base.CraneEditableUserInput
 import androidx.compose.samples.crane.base.CraneUserInput
+import androidx.compose.samples.crane.base.rememberEditableUserInputState
 import androidx.compose.samples.crane.home.PeopleUserInputAnimationState.Invalid
 import androidx.compose.samples.crane.home.PeopleUserInputAnimationState.Valid
 import androidx.compose.samples.crane.ui.CraneTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.flow.filter
 
 enum class PeopleUserInputAnimationState { Valid, Invalid }
 
@@ -97,12 +102,52 @@ fun FromDestination() {
 
 @Composable
 fun ToDestinationUserInput(onToDestinationChanged: (String) -> Unit) {
+    /* BEGIN-7.6. - State holder callers */
+    // As the hint is now part of the state holder, and you want a custom hint
+    // for this instance of CraneEditableUserInput in the Composition, you need
+    // to remember the state at the ToDestinationUserInput level and pass it
+    // into CraneEditableUserInput.
+//    CraneEditableUserInput(
+//        hint = "Choose Destination",
+//        caption = "To",
+//        vectorImageId = R.drawable.ic_plane,
+//        onInputChanged = onToDestinationChanged
+//    )
+    val editableUserInputState = rememberEditableUserInputState(
+        hint = "Choose Destination")
     CraneEditableUserInput(
-        hint = "Choose Destination",
+        state = editableUserInputState,
         caption = "To",
-        vectorImageId = R.drawable.ic_plane,
-        onInputChanged = onToDestinationChanged
+        vectorImageId = R.drawable.ic_plane
     )
+    /* END-7.6 */
+    /* BEGIN-7.7 - snapshotFlow */
+    // The code above is missing functionality to notify
+    // ToDestinationUserInput's caller when the input changes. Due to how the
+    // app is structured, you don't want to hoist the EditableUserInputState any
+    // higher up in the hierarchy. You wouldn't want to couple the other
+    // composables such as FlySearchContent with this state. How can you call
+    // the onToDestinationChanged lambda from ToDestinationUserInput and still
+    // keep this composable reusable?
+    // You can trigger a side-effect using LaunchedEffect every time the input
+    // changes and call the onToDestinationChanged lambda.
+    //
+    // The snapshotFlow API converts Compose State<T> objects into a Flow. When
+    // the state read inside snapshotFlow mutates, the Flow will emit the new
+    // value to the collector. In this case, you convert the state into a flow
+    // to use the power of flow operators. With that, you filter when the text
+    // is not the hint, and collect the emitted items to notify the parent that
+    // the current destination changed.
+    val currentOnDestinationChanged by
+        rememberUpdatedState(onToDestinationChanged)
+    LaunchedEffect(editableUserInputState) {
+        snapshotFlow { editableUserInputState.text }
+            .filter { !editableUserInputState.isHint }
+            .collect {
+                currentOnDestinationChanged(editableUserInputState.text)
+            }
+    }
+    /* END-7.7 */
 }
 
 @Composable
