@@ -36,6 +36,7 @@ import androidx.compose.samples.crane.base.ExploreSection
 import androidx.compose.samples.crane.data.ExploreModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 typealias OnExploreItemClicked = (ExploreModel) -> Unit
@@ -76,9 +77,13 @@ fun CraneHomeContent(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = viewModel(),
 ) {
-    // TODO Codelab: collectAsStateWithLifecycle step - consume stream of data from the ViewModel
-    val suggestedDestinations: List<ExploreModel> = remember { emptyList() }
+    /* BEGIN-4 - Consuming a Flow safely from the ViewModel */
+    // val suggestedDestinations: List<ExploreModel> = remember { emptyList() }
+    val suggestedDestinations by
+        viewModel.suggestedDestinations.collectAsStateWithLifecycle()
+    /* END-4 */
 
+    // ...
     val onPeopleChanged: (Int) -> Unit = { viewModel.updatePeople(it) }
     var tabSelected by remember { mutableStateOf(CraneScreen.Fly) }
 
@@ -137,9 +142,11 @@ private fun HomeTabBar(
     ) { tabBarModifier ->
         CraneTabs(
             modifier = tabBarModifier,
-            titles = CraneScreen.values().map { it.name },
+            titles = CraneScreen.entries.map { it.name },
             tabSelected = tabSelected,
-            onTabSelected = { newTab -> onTabSelected(CraneScreen.values()[newTab.ordinal]) }
+            onTabSelected = { newTab ->
+                onTabSelected(CraneScreen.entries[newTab.ordinal])
+            }
         )
     }
 }

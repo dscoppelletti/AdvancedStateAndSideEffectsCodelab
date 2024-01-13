@@ -22,6 +22,15 @@ MAPS_API_KEY={insert_your_api_key_here}
 When restricting the Key to Android apps, use `androidx.compose.samples.crane` as package name, and
 `A0:BD:B3:B6:F0:C4:BE:90:C6:9D:5F:4C:1D:F0:90:80:7F:D7:FE:1F` as SHA-1 certificate fingerprint.
 
+## References
+
+* [State](http://developer.android.com/jetpack/compose/state)
+* [Side Effects](http://developer.android.com/jetpack/compose/side-effects)
+* [UI State](http://developer.android.com/topic/architecture/ui-layer/stateholders#elements-ui)
+* [UI State production](http://developer.android.com/topic/architecture/ui-layer/state-production)
+* [Output types in state production pipelines](http://developer.android.com/topic/architecture/ui-layer/state-production#output-types)
+* [Consuming flows safely in Jetpack Compose](http://medium.com/androiddevelopers/consuming-flows-safely-in-jetpack-compose-cde014d0d5a3)
+
 ## License
 ```
 Copyright 2021 The Android Open Source Project
